@@ -111,7 +111,41 @@ def LR_ROC(data):
 	logit_roc_auc = roc_auc_score(y_test, lr.predict(x_test))
 	fpr , tpr , thresholds = roc_curve(y_test,lr.predict_proba(x_test)[:,1])
 	
-	plt.figure()
+	#AUC is a measure of the overall performance of a diagnostic test and is 
+	#interpreted as the average value of sensitivity for all possible values of specificity
+	
+	fprtpr = np.hstack((fpr[:,np.newaxis],tpr[:,np.newaxis]))
+
+	hull = ConvexHull(fprtpr)
+
+	hull_indices = np.unique(hull.simplices.flat)
+	hull_points = fprtpr[hull_indices,:]
+	hull_points_y=[]
+	hull_points_x=[]
+	for x in range(len(hull_points)):
+		coordinates =  np.split(hull_points[x],2)
+		hull_points_y.append(coordinates[0])
+		hull_points_x.append(coordinates[1])
+		
+		
+	plt.figure(1)
+	plt.title('ROC curve smooth')
+	plt.scatter(hull_points_y,hull_points_x)
+	area_under =  metrics.auc(hull_points_y,hull_points_x)
+	plt.plot(hull_points_y,hull_points_x,label='Area under the curve = %0.2f' %area_under)
+	plt.legend(loc='lower right')
+	
+	
+
+	plt.figure(2)
+	plt.scatter(fpr,tpr)
+	plt.title('Convex Hull')
+	#plt.plot(fpr[hull.vertices],tpr[hull.vertices])
+	plt.plot(fprtpr[:,0], fprtpr[:,1], 'o')
+	for simplex in hull.simplices:
+	     plt.plot(fprtpr[simplex, 0], fprtpr[simplex, 1],'r--',lw=2)
+	
+	plt.figure(3)
 	plt.plot(fpr,tpr,label='Logistic Regression (area = %0.2f)' %logit_roc_auc)
 	plt.plot([0,1],[0,1],'r--')
 	plt.xlabel('False positive rate')
