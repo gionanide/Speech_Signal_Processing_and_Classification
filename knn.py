@@ -133,8 +133,9 @@ def knn_ROC(data):
 	knn = KNeighborsClassifier(n_neighbors=optimalNeighboursNumber)
 	knn.fit(x_train,y_train)
 	y_pred = knn.predict(x_test)
-	print y_pred
-	print y_test
+	#print y_pred
+	#print y_test
+	print 'KNN classifier accuracy: ', knn.score(x_test,y_test)
 	confusionMatrix = confusion_matrix(y_test,y_pred)
 	print 'Confusion matrix: '
 	print confusionMatrix
