@@ -149,7 +149,7 @@ def testModels(data,threshold_input):
 	true_positive=0
 	false_positive=0
 	false_negative=0
-	for x in range(len(prediction)):
+	for x in range(len(prediction)):#reject option
 		if(prediction[x]<1.019 and prediction[x]>1.012):
 			print prediction[x] , ' can not decide'
 		elif(prediction[x]<float(threshold_input)):#the model predict male and we check if it is indeed male
