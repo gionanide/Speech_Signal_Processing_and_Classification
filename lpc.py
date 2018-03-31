@@ -156,6 +156,13 @@ def LPC_autocorrelation(order=13):
 		autocorrelation = sig.fftconvolve(emphasizedSignal, emphasizedSignal[::-1])
 		#autocorrelation method
 		autocorr_coefficients = autocorrelation[autocorrelation.size/2:][:(order + 1)]
+		
+		
+		#using levinson_durbin method instead of solving toeplitz
+		lpc_coefficients_levinson = levinson_durbin(autocorr_coefficients,13)
+		print 'With levinson_durbin instead of toeplitz ' , lpc_coefficients_levinson.numerator
+		
+		
 		#The Toeplitz matrix has constant diagonals, with c as its first column and r as its first row. If r is not given
 		R = linalg.toeplitz(autocorr_coefficients[:order])
 		#Given a square matrix a, return the matrix ainv satisfying
