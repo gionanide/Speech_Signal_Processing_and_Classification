@@ -62,7 +62,7 @@ def returnData(data):
 
 
 #Multilayer Perceptron
-def simpleNN(data):
+def testing_NN(data):
 	X,Y = returnData(data)
 	
 	#determine the validation
@@ -144,7 +144,7 @@ def simpleNN(data):
 		print 'Prediction: ',np.argsort(output[x])[::-1],'True target: ',np.argmax(y_train[x])'''
 
 #Multilayer Perceptron
-def simplerNN(data):
+def simpleNN(data):
 	x_train , x_test , y_train , y_test = preparingData(data)
 
 	#because as we can see from the previous function simpleNN the
@@ -208,7 +208,7 @@ def simplerNN(data):
 
 def main():
 	data = readFeaturesFile()
-	simplerNN(data)
+	simpleNN(data)
 		
 
 main()
