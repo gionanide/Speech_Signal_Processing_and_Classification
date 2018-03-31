@@ -43,6 +43,20 @@ def preparingData(data):
 	#target 
 	Y = array[:,13]
 	return X,Y
+
+#check if a points is under the line which consist from the initial and endind point
+#return True if c is between a and b
+#otherwise returns Flase
+def isUnder(a, b, c):
+	#x_coordinate [0][0]\
+	#y_coordinate [1][0]\
+	result = ((a[0][0] - b[0][0])*(c[1][0] - b[1][0]) - (c[0][0] - b[0][0])*(a[1][0] - b[1][0]))
+	if (result > 0):
+		return True
+	else:
+		return False
+
+
 	
 def LR_ROC(data):
 	#we initialize the random number generator to a const value
@@ -124,15 +138,51 @@ def LR_ROC(data):
 	hull_points_x=[]
 	for x in range(len(hull_points)):
 		coordinates =  np.split(hull_points[x],2)
-		hull_points_y.append(coordinates[0])
-		hull_points_x.append(coordinates[1])
+		hull_points_x.append(coordinates[0])
+		hull_points_y.append(coordinates[1])
 		
+		
+		
+		
+	#this implementation os only for the smooth rock curve
+
+	hull_points_x_curve = []
+	hull_points_y_curve = []
+
+	#determine the starting and ending point
+	startingPoint = np.split(hull_points[0],2)
+	print 'starting point: ',startingPoint
+	print startingPoint[1][0]
+	endingPoint = np.split(hull_points[len(hull_points)-1],2)
+	print 'ending point: ',endingPoint
+
+	#append the strting point into the hull
+	hull_points_x_curve.append(startingPoint[0])
+	hull_points_y_curve.append(startingPoint[1])
+
+	#check if there is a points under the starting and the ending point, only to make the ROC curve
+	print len(hull_points)
+	for x in range(1,len(hull_points)-1):
+		print x
+		coordinates =  np.split(hull_points[x],2)	
+		ifnotUnder = not(isUnder(startingPoint , endingPoint , coordinates))
+		print ifnotUnder
+		if (ifnotUnder):
+			hull_points_y_curve.append(coordinates[1])
+			hull_points_x_curve.append(coordinates[0])
+
+	#append the ending point into the hull
+	hull_points_x_curve.append(endingPoint[0])
+	hull_points_y_curve.append(endingPoint[1])	
+		
+	
+	
 		
 	plt.figure(1)
 	plt.title('ROC curve smooth')
 	plt.scatter(hull_points_y,hull_points_x)
 	area_under =  metrics.auc(hull_points_y,hull_points_x)
-	plt.plot(hull_points_y,hull_points_x,label='Area under the curve = %0.2f' %area_under)
+	plt.plot(hull_points_x_curve,hull_points_y_curve,label='Area under the curve = %0.2f' %area_under)
 	plt.legend(loc='lower right')
 	
 	
