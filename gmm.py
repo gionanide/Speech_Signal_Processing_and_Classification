@@ -132,11 +132,18 @@ def testModels(data,threshold_input):
 		log_likelihood[i] = scores.sum()
 	#higher the value it is, the more likely your model fits the model
 	for x in range(len(assessModel[0])):
-		#the division is gmm(Malemodel) / gmm(Femalemodel) if the result is > 1 then the example is
+		#the division is gmm(Malemodel) / gmm(Femalemodel) if the result is > 1 then the example is male
+		
+		
+		#if the prediction for male in negative and the prediction for female positive we dont have to check
+		#because the difference is obvious and we are pretty sure that it is female
 		if(assessModel[0][x] < 0 and assessModel[1][x] > 0):
 			# x / y and x is < 0 , so we have to classify this as female
 			# we have to be sure that the prediction will be above the threshold 
 			prediction.append(float(threshold_input) + 1)
+			
+		#same as above , we need to be sure that the prediction is below the threshold (male) because we are pretty
+		#sure from the model's outcome that this sample is female
 		elif(assessModel[0][x] > 0 and assessModel[1][x] < 0):
 			prediction.append(float(threshold_input) - 1)
 		else:
