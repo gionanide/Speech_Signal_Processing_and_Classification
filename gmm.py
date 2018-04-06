@@ -187,6 +187,13 @@ def testModels(data,threshold_input):
 	confusion_matrix[1][1]= true_positive
 
 	
+	#sensitivity/ true positive rate
+	tpr = (true_positive)/(true_positive + false_negative)
+	#fall-out/ false positive rate
+	fpr = (false_positive)/(false_positive + true_negative)
+
+	#ROC curve with error and reject option
+	
 				
 	winner = np.argmax(log_likelihood)
 	print ''
@@ -200,6 +207,35 @@ def testModels(data,threshold_input):
 	print '               ',confusion_matrix[1],'    1.0: ',female_support
 	print ''
 	print 'Accuracy: ', ( assessment.count(True) / len(assessment) ) * 100 
+	
+	
+	#with reject option
+	tpr_plot = np.array([0,tpr,1])
+	fpr_plot = np.array([0,fpr,1])
+	#without reject option
+	tpr_plot_wr = np.array([0,0.983606557377,1])
+	fpr_plot_wr = np.array([0,0.0588235294118,1])
+
+	#area under the curve with the reject option
+	area_under_plot =  metrics.auc(fpr_plot,tpr_plot)
+	#area under the curve without the reject option
+	area_under_wr = metrics.auc(fpr_plot_wr,tpr_plot_wr)
+	
+	
+
+
+	plt.figure(3)
+	green_patch = mpatches.Patch(color='green', label='With reject option (area = %0.2f)' %area_under_plot)
+	blue_patch = mpatches.Patch(color='blue', label='Without reject option (area = %0.2f)' %area_under_wr)
+	plt.legend(handles=[green_patch,blue_patch])
+	plt.plot(fpr_plot,tpr_plot,marker='d',linestyle='--',color='g')
+	plt.plot(fpr_plot_wr,tpr_plot_wr,marker='d',linestyle='--',color='b')
+	plt.plot([0,1],[0,1],'r--')
+	plt.xlabel('False positive rate')
+	plt.ylabel('True positive rate')
+	plt.title('Receiver operating characteristic')
+	plt.legend(loc='lower right')
+	plt.show()
 
 
 
