@@ -221,10 +221,16 @@ def testModels(data,threshold_input):
 	#area under the curve without the reject option
 	area_under_wr = metrics.auc(fpr_plot_wr,tpr_plot_wr)
 	
+	#with reject option
+	thresholds = np.array([0.86,0.87,0.88,0.89,0.90,0.91,0.92,0.93,0.94,0.95,0.96,0.97,0.98,0.99,1.0,1.01,1.02,1.03,1.04,1.05,1.06,1.07,1.08,1.09,1.10,1.11,1.12,1.13])
+	accuracy_plot = np.array([89.09090909,90.0,90.909090,92.727272,93.636363,94.545454,94.545454,94.545454,97.272727,97.272727,98.18181818,98.18181818,98.18181818,97.272727,96.363636,95.45454545,95.45454545,92.727272,91.818181,90.909090,90.909090,90.909090,90.909090,90.0,90.0,88.181818,88.181818,87.272727])
+	
+	#without reject option
+	accuracy_wr = np.array([87.5,88.392875,89.285714,91.071428,91.9642785,92.8571428,92.8571428,93.75,95.535714,95.535714,96.42785,96.42785,96.42785,95.535714,94.64285,93.75,95.535714,92.8571428,91.9642785,91.071428,91.071428,91.071428,91.071428,90.178571,90.178571,88.392857,88.1818181,87.5])
 	
 
 
-	plt.figure(3)
+	plt.figure(1)
 	green_patch = mpatches.Patch(color='green', label='With reject option (area = %0.2f)' %area_under_plot)
 	blue_patch = mpatches.Patch(color='blue', label='Without reject option (area = %0.2f)' %area_under_wr)
 	plt.legend(handles=[green_patch,blue_patch])
@@ -235,6 +241,20 @@ def testModels(data,threshold_input):
 	plt.ylabel('True positive rate')
 	plt.title('Receiver operating characteristic')
 	plt.legend(loc='lower right')
+	
+	
+	
+	plt.figure(2)
+	plt.plot(thresholds,accuracy_plot,marker='o',linestyle='--')
+	plt.xlabel('thresholds')
+	plt.ylabel('accuracy')
+	plt.title('Optimal threshold(with reject option)')
+
+	plt.figure(3)
+	plt.plot(thresholds,accuracy_wr,marker='o',linestyle='--')
+	plt.xlabel('thresholds')
+	plt.ylabel('accuracy')
+	plt.title('Optimal threshold(without reject option)')
 	plt.show()
 
 
