@@ -1,4 +1,4 @@
-Classifiers implementation , initial step for gender and then for healthy and paskinson cases.
+Classifiers implementation , initial step for gender and then for healthy or not  cases.
 
 - Gaussian Mixture Models  
 - K-nearest Neighbours  
