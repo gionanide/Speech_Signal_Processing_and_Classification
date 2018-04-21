@@ -8,3 +8,5 @@ PLP (Perceptual Linear Prediction)
   - and without  
     
 LPC (Liner Predictive Coding)  
+  
+MGCA(Mel Generalized Cepstrum Analysis) 
