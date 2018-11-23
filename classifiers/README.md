@@ -13,3 +13,4 @@ Further elaboration took place :
 - GMMs  
 - KNN  
 - LR
+- SVM
