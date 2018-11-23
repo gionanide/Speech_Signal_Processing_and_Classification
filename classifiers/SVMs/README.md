@@ -1,3 +1,5 @@
-  Implementation of SVM algorithm for classification, in this  folder there are variations as concerns the methods of training and the method of evaluation of SVM algorithm. Experiment resutlts using different kernel functions, and different values of parameters. Training methods with balanced training set, the balance is about the number of samples of each class svm_balancedSampleNumber_greedySearch.py .
+  Implementation of SVM algorithm for classification svm_default.py is using only the default parameters to initialize the procedure.
+  
+ In this  folder there are variations as concerns the methods of training and the method of evaluation of SVM algorithm. Experiment resutlts using different kernel functions, and different values of parameters. Training methods with balanced training set, the balance is about the number of samples of each class svm_balancedSampleNumber_greedySearch.py .
 
   Examples of this training is using the divided parts and keep only the samples that are support vectors in every iteration, continue this procedure until the class with more samples is finished of iterating. Last one, using greedy algorithms to calculate the kernel parameters.
