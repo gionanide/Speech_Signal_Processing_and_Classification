@@ -8,6 +8,7 @@ from sklearn.model_selection import cross_val_score, GridSearchCV
 import timeit
 import numpy as np
 import itertools
+import sys
 
 
 '''this function takes as an input the path of a file with features and labels and returns the content of this file as a csv format in
@@ -53,7 +54,17 @@ def equalizeClasses(data):
 	weight = len(class0) // len(class1) #take the results as an integer in order to split the class, using prior knowledge that 
 	#class0 has more samples, if it is bigger class0 has more samples and to be exact weight to 1 
 
-	balance = (len(class0) // weight) #this is the number of samples in order to balance our classes
+	#check division with zero
+	if(weight == 0):
+		print 'Now the amount of samples in class0 is smaller than half the amount of samples in class1 because we reduce the class0 samples by taking only the support vectors'
+		if(len(class0)<(len(class1)/2)):
+			#if the amount of samples in class0 is below the amount of half of the samples in class1 terminate the script
+			sys.exit()
+		else:
+			#else, take all the samples from class0
+			weight = 1
+	else:
+		balance = (len(class0) // weight) #this is the number of samples in order to balance our classes
 
 	#the keyword argument frac specifies the fraction of rows to return in the random sample, so fra=1 means, return random all rows
 	#we kind of a way shuffle our data in order not to take the same samples in every iteration
@@ -101,8 +112,7 @@ def paramTuning(features_train, labels_train, nfolds):
 
 
 '''Classify Parkinson and Helathy. Building a model which is going to be trained with of given cases and test according to new ones'''
-def classifyPHC():
-	data = readFile()
+def classifyPHC(data):
 	#take the array with the units of samples of class0 divided properly to train the model in a balanced dataset
 	data1,class1 = equalizeClasses(data)
 	#run this procedure by using all the units
@@ -156,7 +166,7 @@ def classifyPHC():
 		#try 5-fold cross validation
 		scores = cross_val_score(svm, features_train, labels_train, cv=5)
 		print 'cross validation scores for 5-fold',scores,'\n'
-		print 'parameters of the model: \n',svm.get_params(),'\n'
+		#print 'parameters of the model: \n',svm.get_params(),'\n'
 
 		print 'number of samples used as support vectors',len(svm.support_vectors_),'\n'
 
@@ -168,7 +178,9 @@ def classifyPHC():
 	
 '''make this function because we need to keep only the support vectors from the class with bigger amount of samples in order to train
 the model with the support vectors only the class0 and all the samples from the class1, also we need to remove the duplicates because
-it is possible that we took duplicates as support vectors, and to delete the support vectors from class1.'''
+it is possible that we took duplicates as support vectors, and to delete the support vectors from class1. In this function we are doing the same procedure as previous in order to classify with SVM, but we are using only the samples
+from class0 that in our previous iterations they appear themselves as support vectors and all the samples from the class1. We are 
+doing this because we have discrepancies in the amount of samples of the two classes. Trying to get better training results.'''
 def initSupportVectors(support_vectors, class1):
 	flattened_list = []
 
@@ -177,6 +189,9 @@ def initSupportVectors(support_vectors, class1):
 		#for every samples in the support vector list
 		for y in x:
 			flattened_list.append(list(y))
+
+
+	print 'Amount of support vectors with duplicates: ',len(flattened_list)
 
 	#use this command to remove all the duplicates of the list
 	uniqueSupportVectors = [list(l) for l in set(tuple(l) for l in flattened_list)]
@@ -187,6 +202,8 @@ def initSupportVectors(support_vectors, class1):
 	#convert the dataFrame into a list which has sublists and every lists contains the features, for exampes the sublist[0] contains
 	#all the Feature1 of every samples ans so on, so we have to divide it in order to make the real samples
 
+
+	
 	#1825-2102, take every row of the data frame add put it in a list of lists
 	class1SamplesInaList = []
 	#here we iterate the dataFrame, particularly the rows we define with the range
@@ -205,7 +222,6 @@ def initSupportVectors(support_vectors, class1):
 	#class1SamplesInaList the array which contains as a list every sample of class1 one in a list of lists
 	#uniqueSupportVectors contains all the samples that used as support_vectors in every iteration erasing the duplicates
 	#becuase the samples from class1 took place in every iteration
-	print len(uniqueSupportVectors)
 	
 
 	#iterate every sample of the class1 in order to check if it exists in the list
@@ -215,6 +231,8 @@ def initSupportVectors(support_vectors, class1):
 			#remove the specific list from the support_vectors that we are going to use
 			uniqueSupportVectors.remove(x)
 
+	print 'Amount of support vectors without duplicates', len(uniqueSupportVectors),'\n'
+
 	#so we know that this array contains the support_vectors which are samples only from class0 and there is no duplicates,
 	#so we have to add a last element in every array to declare the label of the samples and it is going to be 0 because
 	#we know the class that the samples come from
@@ -222,7 +240,7 @@ def initSupportVectors(support_vectors, class1):
 		x.append(0)
 
 	#initialize the dataframe that we want to return 
-	support_vectors_dataframe = pd.DataFrame(columns=['Feauture1','Feauture2','Feauture3','Feauture4','Feauture5','Feauture6','Feauture7','Feauture8','Feauture9','Feauture10','Feauture11','Feauture12','Feauture13','Label'])
+	support_vectors_dataframe = pd.DataFrame(columns=['Feature1','Feature2','Feature3','Feature4','Feature5','Feature6','Feature7','Feature8','Feature9','Feature10','Feature11','Feature12','Feature13','Label'])                             
 	for x in range(len(uniqueSupportVectors)):
 		#we need to add the columns and the rows of the dataframe so we are going to do it manually
 		support_vectors_dataframe.loc[x] = [uniqueSupportVectors[x][y] for y in range(len(uniqueSupportVectors[x]))]
@@ -230,7 +248,9 @@ def initSupportVectors(support_vectors, class1):
 	
 	#return the dataframe which contains all the support vectors from all the iteration of training with all the units of samples
 	#of only the class0, and now we are ready to train with them and all the samples of the class1
-	return support_vectors_dataframe
+	return pd.concat([support_vectors_dataframe,class1])
+	#returns the new data ready to train the model
+	#the samples from class0 which were support_vectros and all the samples from class1
 	
 
 
@@ -239,15 +259,23 @@ def main():
 	import time
 	start_time = time.time()
 
-	#we are making an array in order to keep the support vectors and feed the function with them for the next iteration
-	support_vectors, class1 = classifyPHC()
+	data = readFile()
 
-	#flat the list of lists into one list
-	support_vectors_dataframe = initSupportVectors(support_vectors, class1)
-	print support_vectors_dataframe
+	while True:
+
+		#we are making an array in order to keep the support vectors and feed the function with them for the next iteration
+		support_vectors, class1 = classifyPHC(data)
+
+		#flat the list of lists into one list
+		data = initSupportVectors(support_vectors, class1)
+
+		print 'END OF ITERATION NOW WE ARE TRAINING WITH A NEW REDUCED SET OF SUPPORT VECTORS FROM CLASS 0 \n\n\n\n\n\n\n\n'
 	
 
 	time = time.time()-start_time
 	print 'time: ',time
 
 main()
+
+
+
