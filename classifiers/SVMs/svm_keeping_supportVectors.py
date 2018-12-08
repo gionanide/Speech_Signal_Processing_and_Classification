@@ -9,6 +9,8 @@ import timeit
 import numpy as np
 import itertools
 import sys
+from sklearn.preprocessing import MinMaxScaler
+
 
 
 '''this function takes as an input the path of a file with features and labels and returns the content of this file as a csv format in
@@ -81,7 +83,7 @@ def equalizeClasses(data):
 	
 	#return the new balanced(number of samples from each class) dataFrame
 	#return both classes in order to compine them later
-	return newData, class1
+	return newData, class1, class0
 
 
 '''we use this function in order to apply greedy search for finding the parameters that best fit our model. We have to mention
@@ -114,8 +116,10 @@ def paramTuning(features_train, labels_train, nfolds):
 '''Classify Parkinson and Helathy. Building a model which is going to be trained with of given cases and test according to new ones'''
 def classifyPHC(data):
 	#take the array with the units of samples of class0 divided properly to train the model in a balanced dataset
-	data1,class1 = equalizeClasses(data)
+	data1,class1,class0 = equalizeClasses(data)
 	#run this procedure by using all the units
+
+
 	support_vectors=[]
 	for newdata in data1:
 		data = pd.concat([newdata, class1])
@@ -125,8 +129,23 @@ def classifyPHC(data):
 		validation_size = 0.2
 	
 		#here we are splitting our data based on the validation_size into training and testing data
-		features_train, features_validation, labels_train, labels_validation = model_selection.train_test_split(features, labels, 
+		features_train_unscaled, features_validation_unscaled, labels_train, labels_validation = model_selection.train_test_split(features, labels, 
 				test_size=validation_size)
+
+		#normalize data in the range [-1,1]
+		scaler = MinMaxScaler(feature_range=(-1, 1))
+		#fit only th training data in order to find the margin and then test to data without normalize them
+		scaler.fit(features_train_unscaled)
+
+		features_train = scaler.transform(features_train_unscaled)
+
+		#trnasform the validation features without fitting them
+		features_validation = scaler.transform(features_validation_unscaled)
+
+		
+		
+				
+
 
 		#we can see the shapes of the array just to check
 		print 'feature training array: ',features_train.shape,'and label training array: ',labels_train.shape
@@ -137,7 +156,7 @@ def classifyPHC(data):
 		#paramTuning(features_train, labels_train, 5)
 
 		#we initialize our model
-		svm = SVC(kernel='rbf',C=1000,gamma=1e-07,decision_function_shape='ovo')
+		svm = SVC(kernel='rbf',C=10,gamma=1,decision_function_shape='ovr')
 
 		#train our model with the data that we previously precessed
 		svm.fit(features_train,labels_train)
@@ -146,6 +165,11 @@ def classifyPHC(data):
 		predicted_labels = svm.predict(features_validation)
 		accuracy = accuracy_score(labels_validation, predicted_labels)
 		print 'Classification accuracy: ',accuracy*100,'\n'
+
+		#see the accuracy in training procedure
+		predicted_labels_train = svm.predict(features_train)
+		accuracy_train = accuracy_score(labels_train, predicted_labels_train)
+		print 'Training accuracy: ',accuracy_train*100,'\n'
 
 		#confusion matrix to illustrate the faulty classification of each class
 		conf_matrix = confusion_matrix(labels_validation, predicted_labels)
@@ -171,9 +195,13 @@ def classifyPHC(data):
 		print 'number of samples used as support vectors',len(svm.support_vectors_),'\n'
 
 		#keep the support vectors of every iteration, until the units of samples of the class0 finishes
-		support_vectors.append(svm.support_vectors_)
+		#but we undo the scaling because we want to scale again our data based on the new training sample
+		unscaledSupportVectors = findUnscaledSupportVectors(features_train_unscaled,features_train,svm.support_vectors_)
+		support_vectors.append(unscaledSupportVectors)
 
-	return support_vectors, class1
+
+
+	return support_vectors, class1, class0,features_train_unscaled,features_train
 	
 	
 '''make this function because we need to keep only the support vectors from the class with bigger amount of samples in order to train
@@ -181,7 +209,7 @@ the model with the support vectors only the class0 and all the samples from the 
 it is possible that we took duplicates as support vectors, and to delete the support vectors from class1. In this function we are doing the same procedure as previous in order to classify with SVM, but we are using only the samples
 from class0 that in our previous iterations they appear themselves as support vectors and all the samples from the class1. We are 
 doing this because we have discrepancies in the amount of samples of the two classes. Trying to get better training results.'''
-def initSupportVectors(support_vectors, class1):
+def initSupportVectors(support_vectors, class1,features_train_unscaled,features_train):
 	flattened_list = []
 
 	#run the list of lists, every list contains on single samples which is support vector
@@ -233,6 +261,7 @@ def initSupportVectors(support_vectors, class1):
 
 	print 'Amount of support vectors without duplicates', len(uniqueSupportVectors),'\n'
 
+
 	#so we know that this array contains the support_vectors which are samples only from class0 and there is no duplicates,
 	#so we have to add a last element in every array to declare the label of the samples and it is going to be 0 because
 	#we know the class that the samples come from
@@ -251,7 +280,47 @@ def initSupportVectors(support_vectors, class1):
 	return pd.concat([support_vectors_dataframe,class1])
 	#returns the new data ready to train the model
 	#the samples from class0 which were support_vectros and all the samples from class1
+
 	
+'''because we scale and we scale again the same data, we have to find the pre-scaled data and feed our classifier otherwise
+it is going to be perfect because of the consecutivr normalizations. In this function we normalize all our data, then we take
+the support vectors from class0 from the function initSupportVectors and we are mapping the scaled support vectors to the 
+pre-scaled samples that they were support vectors after scaling. In order not to scale and scale again the already scaled data. The gene-
+ral problem is that we scale again the support vectors of class0, and the samples from class1 they just be scaled once'''
+def findUnscaledSupportVectors(features_train_unscaled,features_train,support_vectors):
+	#we are applying the same normalization because is the same data so we are going to end up with the same results
+	#normalize data in the range [-1,1]
+	#scaler = MinMaxScaler(feature_range=(-1, 1))
+	#fit only th training data in order to find the margin and then test to data without normalize them
+	#fit exactly the same data as before
+	#scaler.fit(features_train_unscaled)
+
+	unScaled_support_vectors = []
+
+
+	#now we mapped the unscaled data with the scaled data as concerns the position in the array
+	#check all the train features
+	for searchSample in features_train:
+		#because we add support_vectors for every iteration, check for all the iterations
+		#for every array in the array support_vectors
+		#if what I search is a support vector then
+		if searchSample in support_vectors:
+			position = np.where(features_train == searchSample)
+			#print searchSample
+			#print features_train[position[0][0]]
+			#which means that all the lements are equal
+			if(position[1][len(position[1])-1] == 12):
+				#then add it to the unscaled support vectors
+				unScaled_support_vectors.append(features_train_unscaled[position[0][0]])
+				
+				
+				
+	print len(support_vectors)
+	print len(unScaled_support_vectors)
+	print 'position',position
+	#sys.exit()
+	return unScaled_support_vectors
+
 
 
 def main():
@@ -261,21 +330,25 @@ def main():
 
 	data = readFile()
 
+	
+	
 	while True:
 
 		#we are making an array in order to keep the support vectors and feed the function with them for the next iteration
-		support_vectors, class1 = classifyPHC(data)
+		support_vectors, class1, class0,features_train_unscaled,features_train = classifyPHC(data)
 
+		
+		#make class0 list
+		
 		#flat the list of lists into one list
-		data = initSupportVectors(support_vectors, class1)
+		data = initSupportVectors(support_vectors, class1,features_train_unscaled,features_train)
 
-		print 'END OF ITERATION NOW WE ARE TRAINING WITH A NEW REDUCED SET OF SUPPORT VECTORS FROM CLASS 0 \n\n\n\n\n\n\n\n'
+		print 'END OF ITERATION NOW WE ARE TRAINING WITH A NEW REDUCED SET OF SUPPORT VECTORS FROM CLASS 0  and data set length',len(data),'\n\n\n\n\n\n\n\n'
 	
 
 	time = time.time()-start_time
 	print 'time: ',time
 
 main()
-
 
 
