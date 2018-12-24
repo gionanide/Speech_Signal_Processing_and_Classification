@@ -114,12 +114,18 @@ def classifyPHC():
 
 	#reconstruct data training error
 	reconstruct_data = pca.inverse_transform(features_train_pca)
+	
+	
+	error_percentage = (sum(sum(error_matrix))/(len(features_train_scalar)*len(features_train_scalar[0])))*100
 
-	error_matrix = np.absolute(features_train_scalar) - np.absolute(reconstruct_data)
+	#len(features_train_scalar) = len(reconstruct_data) = 89
+	#len(features_train_scalar[0]) = len(reconstruct_data[0]) = 13
 
-	#information loss of pca
-	error = ((np.sum(error_matrix))/len(error_matrix))*100
-	print 'Information loss of pca is: ',error,'\n'
+	#len(error_matrix) = 89, which means for all the samples
+	#len(error_matrix[0]) = 13, for every feature of every sample
+	#we take the sum and we conlcude in an array which has the sum for every feature (error)
+	#so we take the sum again and we divide it with the 89 samples * 13 features
+	print 'Information loss of KernelPCA:',error_percentage,'% \n'
 
 
 	lda = LinearDiscriminantAnalysis()
