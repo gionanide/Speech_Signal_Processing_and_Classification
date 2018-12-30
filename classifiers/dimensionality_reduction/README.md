@@ -3,3 +3,5 @@
   into the dimension class -1 and then using knn. Same as the script 
  # kpca_lda_multiclass.py
  for 3 classes.
+  # pca_kpca_from-skratch.py
+Implementation of Principal Component Analysis and KernelPCA from skratch
