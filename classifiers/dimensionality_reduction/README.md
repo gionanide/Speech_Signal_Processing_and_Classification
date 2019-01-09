@@ -5,3 +5,5 @@
  for 3 classes.
   # pca_kpca_from-skratch.py
 Implementation of Principal Component Analysis and KernelPCA from skratch
+# graph_spectral_analysis&spectral_clustering.py
+Apply dimensionality reduction using graph spectral analysis (LLE, IsoMap etc) and then spectral clustering
