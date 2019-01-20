@@ -2,7 +2,7 @@
 from __future__ import division
 import pandas as pd
 from sklearn import model_selection
-from sklearn.svm import SVC # support vectors for classification
+from sklearn.svm import SVC # supportctors for classification
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.model_selection import cross_val_score, GridSearchCV
 import timeit
