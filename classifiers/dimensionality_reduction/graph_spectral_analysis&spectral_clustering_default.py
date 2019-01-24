@@ -15,7 +15,7 @@ from matplotlib.pyplot import figure
 import seaborn as sns
 from sklearn.manifold import LocallyLinearEmbedding, SpectralEmbedding, Isomap
 from sklearn.cluster import SpectralClustering
-
+from sklearn.metrics.cluster import homogeneity_score
 
 '''this function takes as an input the path of a file with features and labels and returns the content of this file as a csv format in
 the form feature1.........feature13,Label'''
@@ -190,8 +190,13 @@ def classifyPHC():
 	spectralClustering.fit(features_embedded)
 
 	predicted_labels = spectralClustering.labels_
-
-	accuracy = accuracy_score(labels, predicted_labels)
+	
+	#first implementation of score computing
+	#accuracy = accuracy_score(labels, predicted_labels)
+	
+	
+	#More accurate implementation, considering opposite labels
+	accuracy = homogeneity_score(labels, predicted_labels)
 	print 'Clustering accuracy: ',accuracy*100,'\n'
 
 
