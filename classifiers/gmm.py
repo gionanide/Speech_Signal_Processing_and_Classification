@@ -101,7 +101,7 @@ def GaussianMixtureModel(data,gender):
 	
 	#Y = target variable
 	gmm =  GaussianMixture(n_components=8,max_iter=200,covariance_type='diag',n_init=3)
-	gmm.fit(x_train,y_train)
+	gmm.fit(x_train)
 	
 		
 
@@ -122,7 +122,6 @@ def testModels(data,threshold_input,x_test,y_test):
 	models = [pickle.load(open(filename,'r')) for filename in gmmFiles]
 	log_likelihood = np.zeros(len(models))
 	genders = ['male','female']
-	X,Y = preparingData(data)
 	assessModel = []
 	prediction = []
 	features = X
@@ -163,7 +162,7 @@ def testModels(data,threshold_input,x_test,y_test):
 			print prediction[x] , ' can not decide'
 		elif(prediction[x]<float(threshold_input)):#the model predict male and we check if it is indeed male
 			#print prediction[x], ( Y[x] == 0 )
-			decision = (Y[x] == 0)
+			decision = (y_test[x] == 0)
 			assessment.append(decision)
 			if(decision):
 				true_negative+=1
