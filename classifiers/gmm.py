@@ -88,6 +88,8 @@ def GaussianMixtureModel(data,gender):
 	#In the simplest case , GMM's can be used for finding clusters in the same manner as k-means.
 	X,Y = preparingData(data)
 	#print data.head(n=5)
+	
+	x_train, x_test, y_train, y_test = train_test_split(X,Y, test_size=0.20)
 
 	#takes only the first feature to redefine the problem as 1-D problem
 	#dataFeature1 =  data.as_matrix(columns=data.columns[0:1])
@@ -99,7 +101,7 @@ def GaussianMixtureModel(data,gender):
 	
 	#Y = target variable
 	gmm =  GaussianMixture(n_components=8,max_iter=200,covariance_type='diag',n_init=3)
-	gmm.fit(X)
+	gmm.fit(x_train,y_train)
 	
 		
 
@@ -115,7 +117,7 @@ def GaussianMixtureModel(data,gender):
 	result = loadedModel.score(X)
 	print result'''
 
-def testModels(data,threshold_input):
+def testModels(data,threshold_input,x_test,y_test):
 	gmmFiles = ['/home/gionanide/Theses_2017-2018_2519/finalizedModel_0.gmm','/home/gionanide/Theses_2017-2018_2519/finalizedModel_1.gmm']
 	models = [pickle.load(open(filename,'r')) for filename in gmmFiles]
 	log_likelihood = np.zeros(len(models))
@@ -126,9 +128,9 @@ def testModels(data,threshold_input):
 	features = X
 	for i in range(len(models)):
 		gmm = models[i]
-		scores = np.array(gmm.score(features))
+		scores = np.array(gmm.score(x_test))
 		#first take for the male model all the log likelihoods and then the same procedure for the female model
-		assessModel.append(gmm.score_samples(features))
+		assessModel.append(gmm.score_samples(x_test))
 		log_likelihood[i] = scores.sum()
 	#higher the value it is, the more likely your model fits the model
 	for x in range(len(assessModel[0])):
@@ -284,7 +286,7 @@ def main():
 	#determineComponents(data)
 	#GaussianMixtureModel(data,gender)
 	threshold = raw_input('Threshold: ')
-	testModels(data,threshold)
+	testModels(data,threshold,x_test,y_test)
 	#GaussianMixtureModel_only_for_testing(data)
 
 main()
