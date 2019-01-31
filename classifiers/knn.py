@@ -60,9 +60,12 @@ def knn_ROC(data):
 	for n in range(5,20):
 		n_neighbours.append(n)
 		#KNN for variable number of neighbors , check the rates and plot them according to the number of neighbors
-		knn = KNeighborsClassifier(n_neighbors=n).fit(X,Y)
+		x_train, x_test, y_train, y_test = train_test_split(X,Y, test_size=0.20)
+		
+		
+		knn = KNeighborsClassifier(n_neighbors=n).fit(x_train,y_train)
 		for l in range(len(Y)):
-			if Y[l]==knn.predict(X)[l]:
+			if Y[l]==knn.predict(x_test)[l]:
 				#every time the prediction is right
 				accuracy+=1
 		#calcuate the rate %
