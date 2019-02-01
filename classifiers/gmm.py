@@ -89,7 +89,8 @@ def GaussianMixtureModel(data,gender):
 	X,Y = preparingData(data)
 	#print data.head(n=5)
 	
-	x_train, x_test, y_train, y_test = train_test_split(X,Y, test_size=0.20)
+	#we do not split into training and testing becuase we all ready did that in a file basis, so teh X,Y in this
+	#function is to train the model and another file with another set of X,Y is the testModels function to assess the model
 
 	#takes only the first feature to redefine the problem as 1-D problem
 	#dataFeature1 =  data.as_matrix(columns=data.columns[0:1])
@@ -101,7 +102,7 @@ def GaussianMixtureModel(data,gender):
 	
 	#Y = target variable
 	gmm =  GaussianMixture(n_components=8,max_iter=200,covariance_type='diag',n_init=3)
-	gmm.fit(x_train)
+	gmm.fit(X)
 	
 		
 
@@ -127,9 +128,9 @@ def testModels(data,threshold_input,x_test,y_test):
 	features = X
 	for i in range(len(models)):
 		gmm = models[i]
-		scores = np.array(gmm.score(x_test))
+		scores = np.array(gmm.score(features))
 		#first take for the male model all the log likelihoods and then the same procedure for the female model
-		assessModel.append(gmm.score_samples(x_test))
+		assessModel.append(gmm.score_samples(features))
 		log_likelihood[i] = scores.sum()
 	#higher the value it is, the more likely your model fits the model
 	for x in range(len(assessModel[0])):
@@ -162,7 +163,7 @@ def testModels(data,threshold_input,x_test,y_test):
 			print prediction[x] , ' can not decide'
 		elif(prediction[x]<float(threshold_input)):#the model predict male and we check if it is indeed male
 			#print prediction[x], ( Y[x] == 0 )
-			decision = (y_test[x] == 0)
+			decision = (Y[x] == 0)
 			assessment.append(decision)
 			if(decision):
 				true_negative+=1
