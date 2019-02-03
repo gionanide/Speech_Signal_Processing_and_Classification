@@ -45,6 +45,7 @@ def testModels(data,threshold_input):
 	X,Y = preparingData(data)
 	assessModel = []
 	prediction = []
+	#determine the prediction as only with the fatures for testing
 	features = X
 	for i in range(len(models)):
 		gmm = models[i]
