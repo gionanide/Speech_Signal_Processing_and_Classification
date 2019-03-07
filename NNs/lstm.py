@@ -119,7 +119,7 @@ def Visualize(train_predict, test_predict, dataset, time_step, scaler, results):
 
 def main():
 	dataset = helping_functions.initialization()
-	trainT, trainT_1, testT, testT_1, time_step, scaler, dataset = helping_functions.preprocessing(dataset)
+	trainT, trainT_1, testT, testT_1, time_step, scaler, dataset = helping_functions.preprocessing(dataset, time_step)
 	LSTM(trainT, trainT_1, testT, testT_1, time_step, scaler, dataset)
 
 
