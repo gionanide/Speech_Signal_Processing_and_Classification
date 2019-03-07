@@ -61,7 +61,7 @@ def initialization():
 #------------------ Split Data training/testing
 
 #split data into training and testing subsets
-def split_data(dataset, training_size=0.60):
+def split_data(dataset, training_size):
 	
 	#translate the training size into our number of elements
 	train_size = int(len(dataset) * training_size)
@@ -105,7 +105,7 @@ def format_dataset(dataset, time_step):
 
 
 #we use this function in order to do the preprocessing staff, normalize, and maybe another procedures #that we want to implement for making a proper format to our data
-def preprocessing(dataset):
+def preprocessing(dataset, time_step, training_size):
 	
 	#take only tha information of the dataframe and not the indexes or the columns names
 	dataset = dataset.values
@@ -128,7 +128,7 @@ def preprocessing(dataset):
 	#----------------------------------------------------------------> fit only training
 
 	#first we have to split our data into test and training
-	train_samples, test_samples = split_data(dataset)
+	train_samples, test_samples = split_data(dataset, training_size)
 
 	print('Samples chosen for the training procedure: \n')
 	print(train_samples)
