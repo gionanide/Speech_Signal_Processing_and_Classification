@@ -35,11 +35,10 @@ def initialization():
 	print('Running for: ',path.split('/')[6][:-4])
 
 	#define the name of the DataFrame columns
-	names=["flight","scrape_date","departure","arrival","departure_time","arrival_time","day_of_week","days_until_flight","stops","flight_date","flight_duration","holiday","overnight","ticket_price"]
+	names=["x","y"]
 
 	#read the file that we define to the path as a pandas DataFrame with the aforementioned columns, target is the ticket_price, we can feed our model with the usecols
-	timeserie = pd.read_csv(path, names = names,engine='python', index_col=None, usecols = ["flight","scrape_date","departure","arrival","departure_time","arrival_time","day_of_week","days_until_flight","stops","flight_date","flight_duration","holiday","overnight","ticket_price"])[["ticket_price"]]
-
+	timeserie = pd.read_csv(path, names = names,engine='python', index_col=None, usecols = ["x","y"]
 	#visualize the DataFrame, and check the dimensions
 	print('Dataframe: \n')
 	print(timeserie)
