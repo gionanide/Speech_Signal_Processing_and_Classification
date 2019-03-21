@@ -76,8 +76,8 @@ def equalizeClasses(data):
 '''we made this function in order to make a loop, the equalized data take only a small piece of the existing data, so with this 
 loop we are going to take iteratably all the data, but from every iteration we are keeping only the samples who were support
 vectors, the samples only the class which we are taking a piece of it's samples'''
-def keepSV():
-	print 'yolo'
+#def keepSV():
+
 
 
 '''we use this function in order to apply greedy search for finding the parameters that best fit our model. We have to mention
