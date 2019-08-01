@@ -1,6 +1,6 @@
 # Speech-Signal-Processing-and-Classification
 
- #### University of Groningen/ Aristotle University of Thessaloniki 
+ #### Aristotle University of Thessaloniki - University of Groningen
  
 Abstract of my thesis conducted during the 7-8th semesters in School of Informatics at University of Groningen for the first six months and at Aristotle University of Thessaloniki the additional six months. " Two-class classification problems by analyzing the speech signal. "
  
