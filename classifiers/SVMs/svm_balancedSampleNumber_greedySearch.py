@@ -16,7 +16,7 @@ def readFile():
 	'Feature10','Feature11','Feature12','Feature13','Label']
 
 	#path to read the samples, samples consist from healthy subjects and subject suffering from Parkinson's desease.
-	path = '/home/gionanide/theses_cotropoulos_PythonCode/features/parkinson_healthy/mfcc_parkinson_healthy.txt'
+	path = ''
 	#read file in csv format
 	data = pd.read_csv(path,names=names )
 	
