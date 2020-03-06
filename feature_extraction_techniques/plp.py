@@ -15,7 +15,7 @@ import numpy as np
 def readWavFile(wav):
 	#given a path from the keyboard to read a .wav file
 	#wav = raw_input('Give me the path of the .wav file you want to read: ')
-	inputWav = '/home/gionanide/Theses_2017-2018_2519/MEEI-RainBow'+wav
+	inputWav = 'PATH_TO_WAV'+wav
 	return inputWav
 
 #reading the .wav file (signal file) and extract the information we need 
