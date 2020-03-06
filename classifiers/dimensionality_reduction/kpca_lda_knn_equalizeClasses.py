@@ -25,7 +25,7 @@ def readFile():
 	'Feature10','Feature11','Feature12','Feature13','Label']
 
 	#path to read the samples, samples consist from healthy subjects and subject suffering from Parkinson's desease.
-	path = 'mfcc_man_woman.txt'
+	path = 'PATH_TO_SAMPLES.txt'
 	#path = '/home/gionanide/Theses_2017-2018_2519/features/parkinson_healthy/mfcc_parkinson_healthy.txt'
 
 	#read file in csv format
