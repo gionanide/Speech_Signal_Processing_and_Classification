@@ -28,7 +28,7 @@ from sklearn.metrics import roc_curve
 def readFeaturesFile():
 	names = ['Feature1', 'Feature2', 'Feature3', 'Feature4','Feature5','Feature6','Feature7','Feature8','Feature9',
 'Feature10','Feature11','Feature12','Feature13','Gender']
-	data = pd.read_csv("mfcc_featuresLR.txt",names=names )
+	data = pd.read_csv("PATH_TO_SAMPLES.txt",names=names )
 	#the outcome is a list of lists containing the samples with the following format
 	#[charachteristic,feature1,feature2.......,feature13]
 	#characheristic based on what we want for classification , can be (male , female) , also can be (normal-female,edema-female)
