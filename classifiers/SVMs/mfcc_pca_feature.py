@@ -67,17 +67,10 @@ def mean_features(mfcc_features,wav,folder,general_feature_list,general_label_li
 	
 
 
-'''
-given a path from the keyboard to read a .wav file this is for male , female. 
-inputWav = '/home/gionanide/Theses_2017-2018_2519/MEEI-RainBow'+wav
-
-this is for healthy, parskinson
-inputWav = '/home/gionanide/Theses_2017-2018_2519/Gkagkos/Audio_Files'+wav
-'''
 def readWavFile(wav):
 	#wav = raw_input('Give me the path of the .wav file you want to read: ')
 	#inputWav = '/home/gionanide/Theses_2017-2018_2519/MEEI-RainBow'+wav
-	inputWav = '/home/gionanide/Theses_2017-2018_2519/Gkagkos/Audio_Files'+wav
+	inputWav = 'PATH_TO_WAV'+wav
 	return inputWav,wav
 
 	
@@ -85,11 +78,10 @@ def readWavFile(wav):
 
 '''
 write in a txt file the output vectors of every sample
-parkinson,healthy database: featuresNewDatabase.
 '''
 def writeFeatures(general_feature_list,general_label_list,wav,folder):
 	
-	f = open('/home/gionanide/mfcc_parkinson_healthy_pca_feature.txt','a')
+	f = open('PATH_TO_SAMPLES','a')
 	
 
 	#we have to iterato all the general_feature_list
@@ -128,8 +120,8 @@ def readCases():
 
 	- now we want to take all the file names of a directory and them read them accordingly
 
-	healthyCases = os.listdir('/home/gionanide/Theses_2017-2018_2519/Gkagkos/Audio_Files/HC')
-	parkinsonCases = os.listdir('/home/gionanide/Theses_2017-2018_2519/Gkagkos/Audio_Files/PD')
+	healthyCases = os.listdir('PATH_TO_WAV')
+	parkinsonCases = os.listdir('PATH_TO_WAV')
 	
 	return healthyCases , parkinsonCases
 '''
