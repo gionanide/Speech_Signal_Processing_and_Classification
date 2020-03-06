@@ -1,4 +1,4 @@
-Speech features extracted with various techniques.
+EXAMPLE speech features extracted with various techniques.
 
 MFCC (Mel Frequency Cepstral Coefficient)  
   
