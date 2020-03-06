@@ -15,11 +15,11 @@ def readFeaturesFile(gender):
 	
 	#check the gender
 	if(int(gender)==0):
-		data = pd.read_csv("/home/gionanide/Theses_2017-2018_2519/features/gmm_healthy_mfcc.txt",names=names )
+		data = pd.read_csv("PATH_TO_SAMPLES.txt",names=names )
 	elif(int(gender)==1):
-		data = pd.read_csv("/home/gionanide/Theses_2017-2018_2519/features/gmm_captured_mfcc.txt",names=names )
+		data = pd.read_csv("PATH_TO_SAMPLES.txt",names=names )
 	else:
-		data = pd.read_csv("/home/gionanide/Theses_2017-2018_2519/features/mfcc_featuresNewDatabase.txt",names=names )
+		data = pd.read_csv("PATH_TO_SAMPLES.txt",names=names )
 	#the outcome is a list of lists containing the samples with the following format
 	#[charachteristic,feature1,feature2.......,feature13]
 	#characheristic based on what we want for classification , can be (male , female) , also can be (normal-female,edema-female)
@@ -38,7 +38,7 @@ def preparingData(data):
 
 def testModels(data,threshold_input):
 
-	gmmFiles = ['/home/gionanide/Theses_2017-2018_2519/models/finalizedModel_0_healthy.gmm','/home/gionanide/Theses_2017-2018_2519/models/finalizedModel_1_parkinson.gmm']
+	gmmFiles = ['PATH_TO_SAMPLES/finalizedModel_0_healthy.gmm','PATH_TO_SAMPLES/finalizedModel_1_parkinson.gmm']
 	models = [pickle.load(open(filename,'r')) for filename in gmmFiles]
 	log_likelihood = np.zeros(len(models))
 	genders = ['healthy','parkinson']
