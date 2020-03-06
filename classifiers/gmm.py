@@ -62,11 +62,11 @@ def readFeaturesFile(gender):
 	
 	#check the gender
 	if(int(gender)==1):
-		data = pd.read_csv("gmm_female.txt",names=names )
+		data = pd.read_csv("PATH_TO_SAMPLES.txt",names=names )
 	elif(int(gender)==0):
-		data = pd.read_csv("gmm_male.txt",names=names )
+		data = pd.read_csv("PATH_TO_SAMPLES.txt",names=names )
 	else:
-		data = pd.read_csv("mfcc_featuresLR.txt",names=names )
+		data = pd.read_csv("PATH_TO_SAMPLES.txt",names=names )
 	#the outcome is a list of lists containing the samples with the following format
 	#[charachteristic,feature1,feature2.......,feature13]
 	#characheristic based on what we want for classification , can be (male , female) , also can be (normal-female,edema-female)
@@ -109,7 +109,7 @@ def GaussianMixtureModel(data,gender):
 	#save the model to disk
 	filename = 'finalizedModel_'+gender+'.gmm'
 	pickle.dump(gmm,open(filename,'wb'))
-	print 'Model saved in path: /home/gionanide/'+filename
+	print 'Model saved in path: PATH_TO'+filename
 
 
 	return X
@@ -119,7 +119,7 @@ def GaussianMixtureModel(data,gender):
 	print result'''
 
 def testModels(data,threshold_input,x_test,y_test):
-	gmmFiles = ['/home/gionanide/Theses_2017-2018_2519/finalizedModel_0.gmm','/home/gionanide/Theses_2017-2018_2519/finalizedModel_1.gmm']
+	gmmFiles = ['PATH_TO/finalizedModel_0.gmm','PATH_TO/finalizedModel_1.gmm']
 	models = [pickle.load(open(filename,'r')) for filename in gmmFiles]
 	log_likelihood = np.zeros(len(models))
 	genders = ['male','female']
