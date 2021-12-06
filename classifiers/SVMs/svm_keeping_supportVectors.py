@@ -113,7 +113,7 @@ def paramTuning(features_train, labels_train, nfolds):
 
 
 
-'''Classify Parkinson and Helathy. Building a model which is going to be trained with of given cases and test according to new ones'''
+'''Building a model which is going to be trained with of given cases and test according to new ones'''
 def classifyPHC(data):
 	#take the array with the units of samples of class0 divided properly to train the model in a balanced dataset
 	data1,class1,class0 = equalizeClasses(data)
