@@ -11,7 +11,6 @@ from sklearn.model_selection import cross_val_score, GridSearchCV
 the form feature1.........feature13,Label'''
 def readFile():
 	#make the format of the csv file. Our format is a vector with 13 features and a label which show the condition of the
-	#sample hc/pc : helathy case, parkinson case
   	names = ['Feature1', 'Feature2', 'Feature3', 'Feature4','Feature5','Feature6','Feature7','Feature8','Feature9',
 	'Feature10','Feature11','Feature12','Feature13','Label']
 
@@ -96,7 +95,7 @@ def paramTuning(features_train, labels_train, nfolds):
 
 
 
-'''Classify Parkinson and Helathy. Building a model which is going to be trained with of given cases and test according to new ones'''
+'''Building a model which is going to be trained with of given cases and test according to new ones'''
 def classifyPHC():
 	data = readFile()
 	data = equalizeClasses(data)
