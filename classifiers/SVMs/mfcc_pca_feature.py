@@ -69,7 +69,6 @@ def mean_features(mfcc_features,wav,folder,general_feature_list,general_label_li
 
 def readWavFile(wav):
 	#wav = raw_input('Give me the path of the .wav file you want to read: ')
-	#inputWav = '/home/gionanide/Theses_2017-2018_2519/MEEI-RainBow'+wav
 	inputWav = 'PATH_TO_WAV'+wav
 	return inputWav,wav
 
@@ -115,9 +114,6 @@ def makeFormat(folder):
 
 '''
 def readCases():
-	#healthy cases = 1.825 , we are going to mark these cases with 0(zero)
-	#parkinson cases = 278 , and theses cases with 1(one)
-
 	- now we want to take all the file names of a directory and them read them accordingly
 
 	healthyCases = os.listdir('PATH_TO_WAV')
@@ -194,7 +190,7 @@ def paramTuning(features_train, labels_train, nfolds):
 
 
 
-'''Classify Parkinson and Helathy. Building a model which is going to be trained with of given cases and test according to new ones'''
+'''Building a model which is going to be trained with of given cases and test according to new ones'''
 def classifyPHC(general_feature_list,general_label_list):
 	#because we took features and labels seperatly we have to put them in the same list
 	#and because for every signal we have different frames we took the first 12800 features
@@ -312,14 +308,14 @@ def mainParkinson():
 	general_label_list = []
 	folder = raw_input('Give the name of the folder that you want to read data: ')
 	if(folder == 'PD'):
-		healthyCases = os.listdir('/home/gionanide/Theses_2017-2018_2519/Gkagkos/Audio_Files/PD')
+		healthyCases = os.listdir(PATH)
 		for x in healthyCases:
 			wav = '/'+folder+'/'+str(x)
 			mfcc_features,inputWav = mfcc_features_extraction(wav)
 			mean_features(mfcc_features,inputWav,folder,general_feature_list,general_label_list)
 		folder = raw_input('Give the name of the folder that you want to read data: ')
 		if(folder == 'HC'):
-			parkinsonCases = os.listdir('/home/gionanide/Theses_2017-2018_2519/Gkagkos/Audio_Files/HC')
+			parkinsonCases = os.listdir(PATH)
 			for x in parkinsonCases:
 				wav = '/'+folder+'/'+str(x)
 				mfcc_features,inputWav = mfcc_features_extraction(wav)
