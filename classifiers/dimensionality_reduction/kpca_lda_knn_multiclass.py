@@ -76,7 +76,7 @@ def paramTuning(features_train, labels_train, nfolds):
 
 
 
-'''Classify Parkinson and Helathy. Building a model which is going to be trained with of given cases and test according to new ones'''
+'''Building a model which is going to be trained with of given cases and test according to new ones'''
 def classifyPHC():
 	data = readFile()
 	#data = equalizeClasses(data)
